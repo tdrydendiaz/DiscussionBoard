@@ -1,8 +1,21 @@
 const express = require("express");
 const router = express.Router();
 const _=require("lodash");
-
+const User = require("../schema")
 let myArray = [];
+
+router.get("/all", (req, res) => {
+  const errors = {};
+  User.find()
+    .then(User => {
+      if (!User) {
+        errors.noItems = "There are no items";
+        res.status(404).json(errors);
+      }
+      res.json(User);
+    })
+    .catch(err => res.status(404).json({ noItems: "There are no items" }));
+});
 
 
 router.post("/array", (req, res) => {
