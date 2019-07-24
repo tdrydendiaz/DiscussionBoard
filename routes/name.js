@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const _=require("lodash");
-const User = require("../schema")
+const User = require("../schema.js")
 let myArray = [];
 
 router.get("/all", (req, res) => {
@@ -17,52 +17,62 @@ router.get("/all", (req, res) => {
     .catch(err => res.status(404).json({ noItems: "There are no items" }));
 });
 
-router.get("/username", (req, res) => {
-  const errors = {};
-  User.find({username:req.body.username})
-    .then(User => {
-      if (!User) {
-        errors.noItems = "There are no items";
-        res.status(404).json(errors);
-      }
-      res.json(items);
-    })
-    .catch(err => res.status(404).json({ noItems: "There are no items" }));
-});
+// router.get("/username", (req, res) => {
+//   const errors = {};
+//   User.find({username:req.body.username})
+//     .then(User => {
+//       if (!User) {
+//         errors.noItems = "There are no items";
+//         res.status(404).json(errors);
+//       }
+//       res.json(items);
+//     })
+//     .catch(err => res.status(404).json({ noItems: "There are no items" }));
+// });
+
+
 
 router.post("/adduser", (req, res) => {
 
     const newU = new User({
-        "username": req.body.username,
-        "content": req.body.content
+        username: req.body.username,
+        context: req.body.context
 });
   const errors = {}; 
   newU.save()
-.then(User => {
-      if (!User) {
-        errors.noItems = "There are no items";
-        res.status(404).json(errors);
-      }
-      res.json(items);
+        .then(()=> {
+            res.json(newU);
+             console.log('complete')
+        })
+});
+
+router.post("/create", (req, res) =>{
+    const item = new User({
+        name: req.body.username,
+        context: req.body.context
     })
-    .catch(err => res.status(404).json({ noItems: "There are no items" }));
+    item.save()
+        .then(()=> {
+            res.json(item);
+             console.log('complete')
+        })
+        .catch(err => res.status(404).json(err));
 });
 
 
 
-
-router.delete("/deleteuser", (req, res) => {
-  const errors = {};
-  User.deleteOne({username:req.body.username})
-    .then(User => {
-      if (!User) {
-        errors.noItems = "There are no items";
-        res.status(404).json(errors);
-      }
-      res.json(items);
-    })
-    .catch(err => res.status(404).json({ noItems: "There are no items" }));
-});
+// router.delete("/deleteuser", (req, res) => {
+//   const errors = {};
+//   User.deleteOne({username:req.body.username})
+//     .then(User => {
+//       if (!User) {
+//         errors.noItems = "There are no items";
+//         res.status(404).json(errors);
+//       }
+//       res.json(items);
+//     })
+//     .catch(err => res.status(404).json({ noItems: "There are no items" }));
+// });
 
 
 
