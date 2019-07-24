@@ -17,6 +17,55 @@ router.get("/all", (req, res) => {
     .catch(err => res.status(404).json({ noItems: "There are no items" }));
 });
 
+router.get("/username", (req, res) => {
+  const errors = {};
+  User.find({username:req.body.username})
+    .then(User => {
+      if (!User) {
+        errors.noItems = "There are no items";
+        res.status(404).json(errors);
+      }
+      res.json(items);
+    })
+    .catch(err => res.status(404).json({ noItems: "There are no items" }));
+});
+
+router.post("/adduser", (req, res) => {
+
+    const newU = new User({
+        "username": req.body.username,
+        "content": req.body.content
+});
+  const errors = {}; 
+  newU.save()
+.then(User => {
+      if (!User) {
+        errors.noItems = "There are no items";
+        res.status(404).json(errors);
+      }
+      res.json(items);
+    })
+    .catch(err => res.status(404).json({ noItems: "There are no items" }));
+});
+
+
+
+
+router.delete("/deleteuser", (req, res) => {
+  const errors = {};
+  User.deleteOne({username:req.body.username})
+    .then(User => {
+      if (!User) {
+        errors.noItems = "There are no items";
+        res.status(404).json(errors);
+      }
+      res.json(items);
+    })
+    .catch(err => res.status(404).json({ noItems: "There are no items" }));
+});
+
+
+
 
 router.post("/array", (req, res) => {
     let newItem = {
