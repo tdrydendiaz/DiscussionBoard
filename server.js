@@ -19,7 +19,7 @@ mongoose.connect(
 
 
 //username
-const name = require("./routes/name.js");
+const name = require("./routes/name");
 //message
 const message = require("./routes/message.js");
 

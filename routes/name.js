@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const _=require("lodash");
-const User = require("../schema.js")
+const User = require("../models/schema")
 let myArray = [];
 
 router.get("/all", (req, res) => {
@@ -61,20 +61,22 @@ router.post("/create", (req, res) =>{
 
 router.put("/updatename", (req, res) => {
   User.replaceOne({'name': req.body.username},
-{'name': req.body.replacementname, "context": req.body.context})
+{ 'name': req.body.username, "context": req.body.context})
   .then(({ ok, n }) => {
-              res.json(User)
+              res.json(n)
     })
         .catch(err => res.status(404).json(err));
     })
 
 
 router.delete("/delete", (req, res) => {
+
   User.deleteOne({'name': req.body.username})
   .then(({ ok, n }) => {
               res.json(username)
     })
-        .catch(err => res.status(404).json(err));
+        .catch(err => res.status(404).json(err))
+
     })
 
 // router.delete("/deleteuser", (req, res) => {
