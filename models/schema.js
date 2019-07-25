@@ -12,6 +12,11 @@ var userSchema = new Schema({
     type: String,
     required:false,
     minlength:4
+    },
+    email: {
+    type: String,
+    required:true,
+    minlength:3    
     }
 });
 
