@@ -120,6 +120,7 @@ router.post("/create", (req, res) =>{
 });
 });
 
+
 router.put("/updatename", (req, res) => {
     User.replaceOne({ 'name': req.body.username },
         { 'name': req.body.username, "context": req.body.context })
@@ -131,14 +132,26 @@ router.put("/updatename", (req, res) => {
 
 
 router.delete("/delete", (req, res) => {
-
-    User.deleteOne({ 'name': req.body.username })
+ errors = {};
+  const email = req.body.email;
+  const hashedValue = req.body.hashedValue;
+  bcrypt.compare(email, hashedValue).then(isMatch => {
+    if (isMatch) {
+    User.deleteOne({'name': req.body.username })
         .then(({ ok, n }) => {
-            res.json(username)
+            res.json(n)
         })
         .catch(err => res.status(404).json(err))
-
+ } else {
+    errors.value = "Incorrect";
+    return res.status(400).json(errors);
+    }
 })
+})
+
+
+
+
 
 // router.delete("/deleteuser", (req, res) => {
 //   const errors = {};
