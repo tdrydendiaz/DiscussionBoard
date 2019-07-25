@@ -32,19 +32,19 @@ router.get("/all", (req, res) => {
 
 
 
-router.post("/adduser", (req, res) => {
+// router.post("/adduser", (req, res) => {
 
-    const newU = new User({
-        username: req.body.username,
-        context: req.body.context
-});
-  const errors = {}; 
-  newU.save()
-        .then(()=> {
-            res.json(newU);
-             console.log('complete')
-        })
-});
+//     const newU = new User({
+//         username: req.body.username,
+//         context: req.body.context
+// });
+//   const errors = {}; 
+//   newU.save()
+//         .then(()=> {
+//             res.json(newU);
+//              console.log('complete')
+//         })
+// });
 
 router.post("/create", (req, res) =>{
     const item = new User({
@@ -59,7 +59,23 @@ router.post("/create", (req, res) =>{
         .catch(err => res.status(404).json(err));
 });
 
+router.put("/updatename", (req, res) => {
+  User.replaceOne({'name': req.body.username},
+{'name': req.body.replacementname, "context": req.body.context})
+  .then(({ ok, n }) => {
+              res.json(User)
+    })
+        .catch(err => res.status(404).json(err));
+    })
 
+
+router.delete("/delete", (req, res) => {
+  User.deleteOne({'name': req.body.username})
+  .then(({ ok, n }) => {
+              res.json(username)
+    })
+        .catch(err => res.status(404).json(err));
+    })
 
 // router.delete("/deleteuser", (req, res) => {
 //   const errors = {};
