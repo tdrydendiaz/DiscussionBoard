@@ -2,102 +2,31 @@ const express = require("express");
 const router = express.Router();
 const _ = require("lodash");
 const bcrypt = require("bcryptjs");
-const User = require("../models/schema")
+const Item = require("../models/schema")
 let myArray = [];
 const validateme = require("../Validator/validator.js")
 
 router.get("/all", (req, res) => {
     const errors = {};
-    User.find({}, '-email')
-        .then(User => {
-            if (!User) {
+    Item.find({}, '-email')
+        .then(Item => {
+            if (!Item) {
                 errors.noItems = "There are no items";
                 res.status(404).json(errors);
             }
-            res.json(User);
+            res.json(Item);
         })
         .catch(err => res.status(404).json({ noItems: "There are no items" }));
 });
 
-// router.get("/username", (req, res) => {
-//   const errors = {};
-//   User.find({username:req.body.username})
-//     .then(User => {
-//       if (!User) {
-//         errors.noItems = "There are no items";
-//         res.status(404).json(errors);
-//       }
-//       res.json(items);
-//     })
-//     .catch(err => res.status(404).json({ noItems: "There are no items" }));
-// });
 
-
-
-// router.post("/adduser", (req, res) => {
-
-//     const newU = new User({
-//         username: req.body.username,
-//         context: req.body.context
-// });
-//   const errors = {}; 
-//   newU.save()
-//         .then(()=> {
-//             res.json(newU);
-//              console.log('complete')
-//         })
-// });
-
-// router.post("/create", (req, res) => {
-
-//     const { errors, isValid } = validateme(req.body);
-
-//     if (!isValid) {
-//         return res.status(400).json(errors);
-//     }
-
-//     const item = new User({
-//         name: req.body.username,
-//         context: req.body.context
-//     })
-//     item.save()
-//         .then(() => {
-//             res.json(item);
-//             console.log('complete')
-//         })
-//         .catch(err => res.status(404).json(err));
-// });
-
-// @route   POST first/post
-// @desc    Post user
-// @access  Public
-// router.post("/create", (req, res) => {
-//     // const response = validateme.validateUserInput(req.body);
-//     const { errors, isValid } = validateUserInput(req.body);
-//     if (!isValid) {
-//         return res.status(400).json(errors);
-//     };
-
-//     const user = new User({
-//         "name": req.body.username,
-//         "context": req.body.context,
-//         "email": req.body.context
-//     });
-
-//     user.save()
-//     .then(() => res.send("User Saved")).catch((err) => res.send(err));
-
-// } else {
-//         res.status(404).json(response.errors);
-//     }
-// });
 
 router.post("/create", (req, res) =>{
     const {errors, isValid} = validateme(req.body);
     if (!isValid) {
         return res.status(400).json(errors);
     };
-    const user = new User({
+    const user = new Item({
         name: req.body.username,
         context: req.body.context,
         email: req.body.email
@@ -122,7 +51,7 @@ router.post("/create", (req, res) =>{
 
 
 router.put("/updatename", (req, res) => {
-    User.replaceOne({ 'name': req.body.username },
+    Item.replaceOne({ 'name': req.body.username },
         { 'name': req.body.username, "context": req.body.context })
         .then(({ ok, n }) => {
             res.json(n)
@@ -131,10 +60,16 @@ router.put("/updatename", (req, res) => {
 })
 
 
+
 router.delete("/delete", (req, res) => {
  errors = {};
   const email = req.body.email;
   const hashedValue = req.body.hashedValue;
+
+  //User.find() using _id
+  //get the email from the found user
+// use this email as hashedvalue
+
   bcrypt.compare(email, hashedValue).then(isMatch => {
     if (isMatch) {
     User.deleteOne({'name': req.body.username })
@@ -147,28 +82,12 @@ router.delete("/delete", (req, res) => {
     return res.status(400).json(errors);
     }
 })
+.catch(err => res.status(404).json(err));
 })
 
 
 
-
-
-// router.delete("/deleteuser", (req, res) => {
-//   const errors = {};
-//   User.deleteOne({username:req.body.username})
-//     .then(User => {
-//       if (!User) {
-//         errors.noItems = "There are no items";
-//         res.status(404).json(errors);
-//       }
-//       res.json(items);
-//     })
-//     .catch(err => res.status(404).json({ noItems: "There are no items" }));
-// });
-
-
-
-
+//original arrays
 router.post("/array", (req, res) => {
     let newItem = {
         "username": req.body.username,

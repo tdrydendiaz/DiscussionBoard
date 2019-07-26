@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 var Schema=mongoose.Schema;
 
-var userSchema = new Schema({
+var itemSchema = new Schema({
     name: {
         type:String,
         required: true,
@@ -20,10 +20,6 @@ var userSchema = new Schema({
     }
 });
 
-// var User = mongoose.model(
-//     'User',
-//     userSchema
-// );
-let User = mongoose.model('User', userSchema);
+let Item = mongoose.model('Item', itemSchema);
 
-module.exports=User;
+module.exports=Item;
